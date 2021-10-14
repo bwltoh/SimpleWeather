@@ -1,4 +1,25 @@
 <resources>
     <string name="app_name">Simple Weather</string>
     <string name="action_settings">Settings</string>
+    <string name="day">%1$s|Day</string>
+    <string name="night">%1$s|Night</string>
+    <string name="placeholder">--</string>
+    <string name="hourly">Hourly</string>
+    <string name="daily">Daily</string>
+    <string name="details">Details</string>
+    <string name="wind">Wind</string>
+    <string name="real_feel">Real Feel</string>
+    <string name="humidity">Humidity</string>
+    <string name="wind_chill">Wind chill</string>
+    <string name="wind_gust">Wind Gust</string>
+    <string name="precipitation">Precipitation</string>
+    <string name="pressure">Pressure</string>
+    <string name="uvindex">UVIndex</string>
+    <string name="today">Today</string>
+    <string name="now">Now</string>
+    <string name="tomorow">Tomorrow</string>
+    <string name="yesterday">Yesterday</string>
+    <string name="add_new_location">add new location</string>
+    <string name="icon">icon</string>
+
 </resources>

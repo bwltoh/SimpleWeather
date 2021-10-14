@@ -17,10 +17,10 @@ import java.util.List;
 @Dao
 public abstract class CityDao {
 
-    //insert new city
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract void insertNewCity(City city);
-    //get list of cities
+
     @Query("SELECT * FROM city")
     abstract LiveData<List<City>> getAllCities();
 
@@ -46,15 +46,17 @@ public abstract class CityDao {
         insertWeatherConditions(conditions);
 
     }
+
     @Query("DELETE FROM current_conditions where city_id LIKE :cityId ")
     abstract void deleteWeatherConditionsForCity(int cityId);
 
     @Insert
-     abstract void insertWeatherConditions(CurrentWeatherConditions conditions);
+    abstract void insertWeatherConditions(CurrentWeatherConditions conditions);
 
     @Transaction
     @Query("SELECT * FROM City")
     public abstract LiveData<List<CityAndCurrentConditionsRelation>> getCityAndWeatherConditions();
 
-
+    @Query("Select * From current_conditions where city_id LIKE :cityId ")
+    public abstract LiveData<CurrentWeatherConditions> getCurrentWeatherConditions(int cityId);
 }

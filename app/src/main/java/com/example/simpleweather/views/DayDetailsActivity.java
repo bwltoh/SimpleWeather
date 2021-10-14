@@ -39,40 +39,40 @@ public class DayDetailsActivity extends AppCompatActivity {
             dayForecasts=gson.fromJson(s,DayForecasts.class);
 
             if (dayForecasts!=null) {
-            setIcon(dayIcon, dayForecasts.getDay().getIcon());
-            setIcon(nightIcon, dayForecasts.getNight().getIcon());
+                setIcon(dayIcon, dayForecasts.getDay().getIcon());
+                setIcon(nightIcon, dayForecasts.getNight().getIcon());
 
 
-            day.setText(TimeUtil.getDayName(dayForecasts.getTime()) + " |Day");
-            tempMax.setText(dayForecasts.getDayTemperature().getMaxTemp().getValue() + " C");
-            precipitationProbabilityDay.setText(dayForecasts.getDay().getPrecipitationProbability() + " %");
-            thunderStormProbabilityDay.setText(dayForecasts.getDay().getThunderstormProbability() + " %");
-            windDay.setText(dayForecasts.getDay().getWind().getSpeed().getValue() + " " + dayForecasts.getDay().getWind().getSpeed().getUnit());
-            longPhrase.setText(dayForecasts.getDay().getLongPhrase());
-            sunRise.setText(TimeUtil.getHour(dayForecasts.getSun().getSunRiseTime(),timeZone));
-            sunSet.setText(TimeUtil.getHour(dayForecasts.getSun().getSunSetTime(),timeZone));
-            rainProbabilityDay.setText(dayForecasts.getDay().getRainProbability() + " %");
-            rainDay.setText(dayForecasts.getDay().getRain().getValue() + " " + dayForecasts.getDay().getRain().getUnit());
-            snowProbabilityDay.setText(dayForecasts.getDay().getSnowProbability() + " %");
-            snowDay.setText(dayForecasts.getDay().getSnow().getValue() + " " + dayForecasts.getDay().getSnow().getUnit());
+                day.setText(getResources().getString(R.string.day, TimeUtil.getDayName(getResources(), dayForecasts.getTime())));
+                tempMax.setText(String.format(TimeUtil.getLocale(getResources()), "%.1f C", dayForecasts.getDayTemperature().getMaxTemp().getValue()));
+                precipitationProbabilityDay.setText(String.format(TimeUtil.getLocale(getResources()), "%d %s", dayForecasts.getDay().getPrecipitationProbability(), " %"));
+                thunderStormProbabilityDay.setText(String.format(TimeUtil.getLocale(getResources()), "%d %s", dayForecasts.getDay().getThunderstormProbability(), " %"));
+                windDay.setText(String.format(TimeUtil.getLocale(getResources()), "%.1f %s", dayForecasts.getDay().getWind().getSpeed().getValue(), dayForecasts.getDay().getWind().getSpeed().getUnit()));
+                longPhrase.setText(dayForecasts.getDay().getLongPhrase());
+                sunRise.setText(TimeUtil.getHour(getResources(), dayForecasts.getSun().getSunRiseTime(), timeZone));
+                sunSet.setText(TimeUtil.getHour(getResources(), dayForecasts.getSun().getSunSetTime(), timeZone));
+                rainProbabilityDay.setText(String.format(TimeUtil.getLocale(getResources()), "%d %s", dayForecasts.getDay().getRainProbability(), " %"));
+                rainDay.setText(String.format(TimeUtil.getLocale(getResources()), "%.1f %s", dayForecasts.getDay().getRain().getValue(), dayForecasts.getDay().getRain().getUnit()));
+                snowProbabilityDay.setText(String.format(TimeUtil.getLocale(getResources()), "%d %s", dayForecasts.getDay().getSnowProbability(), " %"));
+                snowDay.setText(String.format(TimeUtil.getLocale(getResources()), "%.1f %s", dayForecasts.getDay().getSnow().getValue(), dayForecasts.getDay().getSnow().getUnit()));
 
 
-            night.setText(TimeUtil.getDayName(dayForecasts.getTime()) + " |Night");
-            tempMin.setText(dayForecasts.getDayTemperature().getMinTemp().getValue() + " C");
-            precipitationProbabilityNight.setText(dayForecasts.getNight().getPrecipitationProbability() + " %");
-            thunderStormProbabilityNight.setText(dayForecasts.getNight().getThunderstormProbability() + " %");
-            windNight.setText(dayForecasts.getNight().getWind().getSpeed().getValue() + " " + dayForecasts.getNight().getWind().getSpeed().getUnit());
-            longPhraseNight.setText(dayForecasts.getNight().getLongPhrase());
-            moonRise.setText(TimeUtil.getHour(dayForecasts.getMoon().getMoonRiseTime(),timeZone));
-            moonSet.setText(TimeUtil.getHour(dayForecasts.getMoon().getMoonSetTime(),timeZone));
-            moonAge.setText(String.valueOf(dayForecasts.getMoon().getMoonAge()));
-            moonPhase.setText(dayForecasts.getMoon().getMoonPhase());
-            rainProbabilityNight.setText(dayForecasts.getNight().getRainProbability() + " %");
-            rainNight.setText(dayForecasts.getNight().getRain().getValue() + " " + dayForecasts.getNight().getRain().getUnit());
-            snowProbabilityNight.setText(dayForecasts.getNight().getSnowProbability() + " %");
-            snowNight.setText(dayForecasts.getNight().getSnow().getValue() + " " + dayForecasts.getNight().getSnow().getUnit());
+                night.setText(getResources().getString(R.string.night, TimeUtil.getDayName(getResources(), dayForecasts.getTime())));
+                tempMin.setText(String.format(TimeUtil.getLocale(getResources()), "%.1f C", dayForecasts.getDayTemperature().getMinTemp().getValue()));
+                precipitationProbabilityNight.setText(String.format(TimeUtil.getLocale(getResources()), "%d %s", dayForecasts.getNight().getPrecipitationProbability(), " %"));
+                thunderStormProbabilityNight.setText(String.format(TimeUtil.getLocale(getResources()), "%d %s", dayForecasts.getNight().getThunderstormProbability(), " %"));
+                windNight.setText(String.format(TimeUtil.getLocale(getResources()), "%.1f %s", dayForecasts.getNight().getWind().getSpeed().getValue(), dayForecasts.getNight().getWind().getSpeed().getUnit()));
+                longPhraseNight.setText(dayForecasts.getNight().getLongPhrase());
+                moonRise.setText(TimeUtil.getHour(getResources(), dayForecasts.getMoon().getMoonRiseTime(), timeZone));
+                moonSet.setText(TimeUtil.getHour(getResources(), dayForecasts.getMoon().getMoonSetTime(), timeZone));
+                moonAge.setText(String.format(TimeUtil.getLocale(getResources()), "%d", dayForecasts.getMoon().getMoonAge()));
+                moonPhase.setText(dayForecasts.getMoon().getMoonPhase());
+                rainProbabilityNight.setText(String.format(TimeUtil.getLocale(getResources()), "%d %s", dayForecasts.getNight().getRainProbability(), " %"));
+                rainNight.setText(String.format(TimeUtil.getLocale(getResources()), "%.1f %s", dayForecasts.getNight().getRain().getValue(), dayForecasts.getNight().getRain().getUnit()));
+                snowProbabilityNight.setText(String.format(TimeUtil.getLocale(getResources()), "%d %s", dayForecasts.getNight().getSnowProbability(), " %"));
+                snowNight.setText(String.format(TimeUtil.getLocale(getResources()), "%.1f %s", dayForecasts.getNight().getSnow().getValue(), dayForecasts.getNight().getSnow().getUnit()));
 
-        }
+            }
     }
 
    void initViews(){

@@ -1,6 +1,6 @@
 package com.example.simpleweather.network;
 
-import android.content.Context;
+import android.app.Application;
 
 import com.example.simpleweather.utils.Constants;
 import com.example.simpleweather.utils.NetworkUtil;
@@ -22,28 +22,27 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class APIClient {
 
 
-    private static final String BASE_URL = Constants.BASE_URL;
-    private static APIClient mInstance;
-    private Retrofit retrofit;
+    private static final String    BASE_URL = Constants.BASE_URL;
+    private static       APIClient mInstance;
+    private final        Retrofit  retrofit;
 
-    private Context context;
+    private final Application context;
 
-    private APIClient(Context context) {
+    private APIClient(Application context) {
 
-        this.context=context;
+        this.context = context;
 
-        File cachDir=new File(context.getCacheDir(),"http-cache");
-        long cacheSize=10*1024*1024;
-        Cache cache=new Cache(cachDir,cacheSize);
+        File cachDir = new File(context.getCacheDir(), "http-cache");
+        long cacheSize = 10 * 1024 * 1024;
+        Cache cache = new Cache(cachDir, cacheSize);
 
-        HttpLoggingInterceptor logging=new HttpLoggingInterceptor();
-        logging.setLevel(HttpLoggingInterceptor.Level.BODY);
-        final OkHttpClient okHttpClient=new OkHttpClient.Builder()
+        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+        logging.setLevel(HttpLoggingInterceptor.Level.HEADERS);
+        final OkHttpClient okHttpClient = new OkHttpClient.Builder()
                 .readTimeout(60, TimeUnit.SECONDS)
-                .connectTimeout(60,TimeUnit.SECONDS)
+                .connectTimeout(60, TimeUnit.SECONDS)
                 .cache(cache)
                 .addInterceptor(logging)
-                .addNetworkInterceptor(networkInterceptor())
                 .addInterceptor(offLineInterceptor())
                 .build();
         retrofit = new Retrofit.Builder()
@@ -55,7 +54,7 @@ public class APIClient {
 
     }
 
-    public static   synchronized APIClient getInstance(Context context) {
+    public static synchronized APIClient getInstance(Application context) {
         if (mInstance == null) {
             mInstance = new APIClient(context);
         }
@@ -73,47 +72,34 @@ public class APIClient {
             public Response intercept(Chain chain) throws IOException {
 
 
-                Request request=chain.request();
-                if (!NetworkUtil.isNetworkConnected(context)){
-                    CacheControl cacheControl=new CacheControl.Builder()
-                            .maxStale(7,TimeUnit.DAYS)
-                            .build();
+                Request request = chain.request();
 
-                    request=request.newBuilder()
+                if (!NetworkUtil.isNetworkConnected(context)) {
+                    CacheControl cacheControl = new CacheControl.Builder()
+                            .maxStale(2, TimeUnit.DAYS)
+                            .build();
+                    request = request.newBuilder()
+                            .removeHeader("Pragma")
+                            .removeHeader("Cache-Control")
+                            .cacheControl(cacheControl)
+                            .build();
+                } else {
+                    CacheControl cacheControl = new CacheControl.Builder()
+                            .maxAge(2, TimeUnit.HOURS)
+                            .build();
+                    request = request.newBuilder()
                             .removeHeader("Pragma")
                             .removeHeader("Cache-Control")
                             .cacheControl(cacheControl)
                             .build();
                 }
                 return chain.proceed(request);
+
+
             }
         };
     }
 
-    private   Interceptor  networkInterceptor(){
-        return new Interceptor() {
-            @Override
-            public Response intercept(Chain chain) throws IOException {
 
-
-                Response response=chain.proceed(chain.request());
-
-                CacheControl cacheControl=new CacheControl.Builder()
-                        .maxAge(7,TimeUnit.MINUTES)
-                        .build();
-
-
-
-
-                    response=response.newBuilder()
-                            .removeHeader("Pragma")
-                            .removeHeader("Cache-Control")
-                            .header("Cache-Control",cacheControl.toString())
-                            .build();
-
-                return response;
-            }
-        };
-    }
 }
 

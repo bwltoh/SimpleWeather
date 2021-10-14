@@ -24,4 +24,17 @@ public class Direction {
     public String getEnglish() {
         return english;
     }
+
+
+    public void setDegrees(int degrees) {
+        this.degrees = degrees;
+    }
+
+    public void setLocalized(String localized) {
+        this.localized = localized;
+    }
+
+    public void setEnglish(String english) {
+        this.english = english;
+    }
 }

@@ -1,19 +1,19 @@
-package com.example.simpleweather.views;
+package com.example.simpleweather.views.search;
 
-import android.app.Application;
+import android.app.Activity;
 import android.app.SearchManager;
 import android.database.MatrixCursor;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.provider.BaseColumns;
 import android.view.Menu;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.cursoradapter.widget.CursorAdapter;
 import androidx.cursoradapter.widget.SimpleCursorAdapter;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -21,12 +21,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.simpleweather.R;
 import com.example.simpleweather.adapter.SearchAdapter;
-import com.example.simpleweather.database.DatabaseRepository;
 import com.example.simpleweather.model.City;
 import com.example.simpleweather.model.CityAndCurrentConditionsRelation;
 import com.example.simpleweather.utils.Constants;
 import com.example.simpleweather.utils.SwipeToDeleteCallback;
-import com.example.simpleweather.viewmodel.SearchViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -71,39 +69,39 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
         getCitiesAndWeatherList();
         onNewIntent(getIntent());
 
-        enableSwipeToDeleteAndUndo();
+        enableSwipeToDelete();
 
 
     }
 
 
+    private void getCitiesAndWeatherList() {
+        searchViewModel.getCityWeather().observe(this, cityAndCurrentConditionsRelations -> {
+            if (cityAndCurrentConditionsRelations != null) {
 
+                conditionsRelations = cityAndCurrentConditionsRelations;
+                searchAdapter.setCities(conditionsRelations);
 
-
-    private void getCitiesAndWeatherList(){
-        searchViewModel.getCityWeather().observe(this, new Observer<List<CityAndCurrentConditionsRelation>>() {
-            @Override
-            public void onChanged(List<CityAndCurrentConditionsRelation> cityAndCurrentConditionsRelations) {
-                if (cityAndCurrentConditionsRelations!=null){
-
-                    conditionsRelations=cityAndCurrentConditionsRelations;
-                    searchAdapter.setCities(conditionsRelations);
-
-                }
             }
         });
     }
 
-    void getCity(String locationKey, String apiKey, boolean withDetails){
-        searchViewModel.getCityByLocationKey(locationKey, apiKey, withDetails).observe(this, new Observer<City>() {
-            @Override
-            public void onChanged(City city) {
-                if (city!=null)
-                {
-                    DatabaseRepository.getInstance((Application) getApplicationContext()).insertNewCity(city);
+    void getCity(String locationKey, String apiKey, boolean withDetails) {
+        searchViewModel.getCityByLocationKey(locationKey, apiKey, withDetails).observe(this, city -> {
+            switch (city.getStatus()) {
+                case SUCCESS:
+                    searchViewModel.insertCity(city.getData());
+                    setResult(Activity.RESULT_OK);
                     finish();
-                }
+                    break;
+                case LOADING:
+                    Toast.makeText(SearchActivity.this, city.getErrorMessage(), Toast.LENGTH_LONG).show();
+                    break;
+                case ERROR:
+                    Toast.makeText(SearchActivity.this, city.getErrorMessage(), Toast.LENGTH_LONG).show();
+                    break;
             }
+
         });
     }
 
@@ -154,7 +152,7 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
         searchView=(SearchView)menu.findItem(R.id.search).getActionView();
         searchView.setSubmitButtonEnabled(true);
         searchView.setSuggestionsAdapter(suggestionAdapter);
-        searchView.setIconifiedByDefault(false);//do not iconifythe widget expand it by defualt
+        searchView.setIconifiedByDefault(false);//do not iconify the widget expand it by defualt
         searchView.setOnQueryTextListener(this);
         searchView.setOnSuggestionListener(this);
         return super.onCreateOptionsMenu(menu);
@@ -165,30 +163,39 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
 
     private void getSuggestions(String newText) {
 
-        searchViewModel.getSearchResults(Constants.API_KEY,newText).observe(this, new Observer<List<City>>() {
-            @Override
-            public void onChanged(List<City> searchResults) {
-                if (searchResults!=null){
+        searchViewModel.getSearchResults(Constants.API_KEY, newText).observe(this, searchResults -> {
+            switch (searchResults.getStatus()) {
+                case SUCCESS:
                     array.clear();
                     cityList.clear();
-                    List<City> cityList=searchResults;
+                    List<City> cityList = searchResults.getData();
 
+                    if (cityList != null) {
                         array.addAll(cityList);
 
-                    String[] colums={BaseColumns._ID,
-                            SearchManager.SUGGEST_COLUMN_TEXT_1,
-                            SearchManager.SUGGEST_COLUMN_TEXT_2,
-                            SearchManager.SUGGEST_COLUMN_INTENT_DATA};
-                    MatrixCursor cursor=new MatrixCursor(colums);
-                    for (int i=0;i<array.size();i++){
-                        String[] tmp={Integer.toString(i),
-                                cityList.get(i).getCityLocalizedName(),cityList.get(i).getCountry().getLocalizedName(),
-                        cityList.get(i).getKey()};
-                        cursor.addRow(tmp);
+
+                        String[] colums = {BaseColumns._ID,
+                                SearchManager.SUGGEST_COLUMN_TEXT_1,
+                                SearchManager.SUGGEST_COLUMN_TEXT_2,
+                                SearchManager.SUGGEST_COLUMN_INTENT_DATA};
+                        MatrixCursor cursor = new MatrixCursor(colums);
+                        for (int i = 0; i < array.size(); i++) {
+                            String[] tmp = {Integer.toString(i),
+                                    cityList.get(i).getCityLocalizedName(), cityList.get(i).getCountry().getLocalizedName(),
+                                    cityList.get(i).getKey()};
+                            cursor.addRow(tmp);
+                        }
+                        suggestionAdapter.swapCursor(cursor);
                     }
-                    suggestionAdapter.swapCursor(cursor);
-                }
+                    break;
+                case ERROR:
+                    Toast.makeText(SearchActivity.this, searchResults.getErrorMessage(), Toast.LENGTH_LONG).show();
+                    break;
+                case LOADING:
+                    Toast.makeText(SearchActivity.this, searchResults.getErrorMessage(), Toast.LENGTH_LONG).show();
+                    break;
             }
+
         });
     }
 
@@ -200,7 +207,7 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
     }
 
 
-    private void enableSwipeToDeleteAndUndo() {
+    private void enableSwipeToDelete() {
 
         SwipeToDeleteCallback swipeToDeleteCallback = new SwipeToDeleteCallback(this) {
             @Override
@@ -208,7 +215,6 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
 
 
                 final int position = viewHolder.getAdapterPosition();
-
                 searchAdapter.removeItem(position);
 
 

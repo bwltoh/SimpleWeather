@@ -56,7 +56,7 @@ public class DatabaseRepository {
 
     }
 
-    public void deleteCity(final City city){
+    public void deleteCity(final City city) {
         provideExecutor().execute(new Runnable() {
             @Override
             public void run() {
@@ -65,15 +65,20 @@ public class DatabaseRepository {
         });
     }
 
-   public void insertWeatherConditions(final int cityId, final CurrentWeatherConditions conditions){
+    public LiveData<CurrentWeatherConditions> getCurrentWeatherConditions(int cityId) {
+        return cityDao.getCurrentWeatherConditions(cityId);
+    }
+
+    public void insertWeatherConditions(final int cityId, final CurrentWeatherConditions conditions) {
         provideExecutor().execute(new Runnable() {
             @Override
             public void run() {
-                cityDao.insertWeatherConditionsForCity(cityId,conditions);
+                cityDao.insertWeatherConditionsForCity(cityId, conditions);
             }
         });
-   }
-    private Executor provideExecutor(){
+    }
+
+    private Executor provideExecutor() {
         return Executors.newSingleThreadExecutor();
     }
 }

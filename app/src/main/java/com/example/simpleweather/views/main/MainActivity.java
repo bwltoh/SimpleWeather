@@ -1,133 +1,133 @@
-package com.example.simpleweather.views;
+package com.example.simpleweather.views.main;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.os.Looper;
+import android.os.Handler;
 import android.provider.Settings;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
+import android.view.Window;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.app.ActivityCompat;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowCompat;
+import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.viewpager.widget.ViewPager;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.simpleweather.R;
 import com.example.simpleweather.adapter.CityAdapter;
 import com.example.simpleweather.model.City;
-import com.example.simpleweather.network.NetworkRepository;
 import com.example.simpleweather.utils.Constants;
-import com.example.simpleweather.viewmodel.MainViewModel;
+import com.example.simpleweather.views.search.SearchActivity;
 import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationCallback;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static androidx.fragment.app.FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT;
-
 public class MainActivity extends AppCompatActivity {
-
 
     List<City>                  cityArrayList;
     LinearLayout                layout;
-    ViewPager                   viewPager;
+    ViewPager2                  viewPager;
+    CoordinatorLayout           coordinator;
     MainViewModel               mainViewModel;
     TextView                    cityname;
-    NetworkRepository           networkRepository;
     CityAdapter                 cityAdapter;
     int                         PERMISSIN_ID = 234;
     FusedLocationProviderClient fusedLocationProviderClient;
-    ViewPager.OnPageChangeListener changeListener = new ViewPager.OnPageChangeListener() {
-        @Override
-        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
-        }
 
+    ActivityResultLauncher<Intent> activityResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            new ActivityResultCallback<ActivityResult>() {
+                @Override
+                public void onActivityResult(ActivityResult result) {
+                    if (result.getResultCode() == Activity.RESULT_OK) {
+                        new Handler(getMainLooper()).postDelayed(
+                                () -> viewPager.setCurrentItem(viewPager.getAdapter() != null ? viewPager.getAdapter().getItemCount() - 1 : 0),
+                                200
+                        );
+
+                    }
+                }
+
+            }
+    );
+
+    ViewPager2.OnPageChangeCallback changeListener = new ViewPager2.OnPageChangeCallback() {
         @Override
         public void onPageSelected(int position) {
-
+            super.onPageSelected(position);
             createIndicator(cityArrayList.size(), position);
-
-
-        }
-
-        @Override
-        public void onPageScrollStateChanged(int state) {
-
         }
     };
-    private LocationCallback locationCallback = new LocationCallback() {
-        @Override
-        public void onLocationResult(LocationResult locationResult) {
-            super.onLocationResult(locationResult);
-            Location lastLocation = locationResult.getLastLocation();
 
-            String lat = String.valueOf(lastLocation.getLatitude());
-            String lon = String.valueOf(lastLocation.getLongitude());
-            networkRepository.getCityByGeoLocation(Constants.API_KEY, lat + "," + lon);
-
-        }
-    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getWindow().getDecorView().setFitsSystemWindows(false);
-        getWindow().getDecorView().setSystemUiVisibility(
-                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
 
-        );
-
+        Window window = getWindow();
+        WindowCompat.setDecorFitsSystemWindows(window, false);
         setContentView(R.layout.activity_main);
 
 
         AppBarLayout appBarLayout = findViewById(R.id.appbar_layout);
         appBarLayout.setPadding(0, getStatusBarHeight(), 0, 0);
 
-        networkRepository = new NetworkRepository(getApplication());
-        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);// FusedLocationProviderClient(this);
+
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         mainViewModel = new ViewModelProvider(this).get(MainViewModel.class);
+
         cityArrayList = new ArrayList<>();//cities array
         FloatingActionButton fab = findViewById(R.id.fab);
-        layout = findViewById(R.id.indecator);
+        layout = findViewById(R.id.indicator);
         cityname = findViewById(R.id.city_name);
         viewPager = findViewById(R.id.view_pager);
-        viewPager.addOnPageChangeListener(changeListener);
+        coordinator = findViewById(R.id.coordinator);
+        viewPager.registerOnPageChangeCallback(changeListener);
 
-        cityAdapter = new CityAdapter(getSupportFragmentManager(), BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
 
+        cityAdapter = new CityAdapter(this);
         viewPager.setAdapter(cityAdapter);
         getLastLocation();
+
+
+        fab.setOnClickListener(view -> activityResultLauncher.launch(new Intent(MainActivity.this, SearchActivity.class)));
+
         getCities();
-
-
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                startActivity(new Intent(MainActivity.this, SearchActivity.class));
-
-            }
+        //apply bottom margin to coordinator layout so that its content does not do under system navigation bar
+        ViewCompat.setOnApplyWindowInsetsListener(coordinator, (v, insets) -> {
+            Insets inset = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            ViewGroup.MarginLayoutParams marginLayout = (ViewGroup.MarginLayoutParams) v.getLayoutParams();
+            marginLayout.bottomMargin = inset.bottom;
+            v.setLayoutParams(marginLayout);
+            return WindowInsetsCompat.CONSUMED;
         });
     }
 
@@ -139,7 +139,14 @@ public class MainActivity extends AppCompatActivity {
                 if (cities != null && !cities.isEmpty()) {
                     cityArrayList = cities;
                     cityAdapter.setCities(cityArrayList);
-                    createIndicator(cityArrayList.size(), 0);
+
+                    layout.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                        @Override
+                        public void onGlobalLayout() {
+                            createIndicator(cityArrayList.size(), 0);
+                            layout.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                        }
+                    });
                 }
             }
         });
@@ -148,10 +155,11 @@ public class MainActivity extends AppCompatActivity {
     private void createIndicator(int viewCount, int currentPosition) {
 
         cityname.setText(cityArrayList.get(currentPosition).getCityLocalizedName());
-        layout.removeAllViews();
+        if (layout.getChildCount() > 0)
+            layout.removeAllViews();
 
         for (int i = 0; i < viewCount; i++) {
-            View view = new View(this);
+            View view = new View(MainActivity.this);
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(20,
                     20);
             params.rightMargin = 10;
@@ -164,26 +172,20 @@ public class MainActivity extends AppCompatActivity {
             layout.addView(view);
         }
 
-
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
+
         getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
+        return false;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            return true;
+            return false;
         }
 
         return super.onOptionsItemSelected(item);
@@ -193,40 +195,22 @@ public class MainActivity extends AppCompatActivity {
 
         if (checkPermission()) {
             if (isLocationEnabled()) {
-                fusedLocationProviderClient.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Location> task) {
-                        Location location = task.getResult();
-                        if (location == null) {
-                            getNewLocationData();
-                        } else {
-                            String lat = String.valueOf(location.getLatitude());
-                            String lon = String.valueOf(location.getLongitude());
-                            networkRepository.getCityByGeoLocation(Constants.API_KEY, lat + "," + lon);
-
-                        }
+                fusedLocationProviderClient.getLastLocation().addOnCompleteListener(task -> {
+                    Location location = task.getResult();
+                    if (location != null) {
+                        String lat = String.valueOf(location.getLatitude());
+                        String lon = String.valueOf(location.getLongitude());
+                        mainViewModel.getCityByGeoLocation(Constants.API_KEY, lat + "," + lon);
                     }
                 });
             } else {
-                Toast.makeText(this, "turn on your location", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "turn on your device location", Toast.LENGTH_LONG).show();
                 Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                 startActivity(intent);
             }
         } else {
             requestPermissions();
         }
-    }
-
-    private void getNewLocationData() {
-        LocationRequest locationRequest = new LocationRequest();
-        locationRequest.setPriority(LocationRequest.PRIORITY_LOW_POWER);
-        locationRequest.setInterval(5);
-        locationRequest.setFastestInterval(0);
-        locationRequest.setNumUpdates(1);
-
-        fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback, Looper.myLooper());
-
-
     }
 
     private boolean checkPermission() {
@@ -251,6 +235,7 @@ public class MainActivity extends AppCompatActivity {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 getLastLocation();
             } else {
+                Toast.makeText(this, "This Permission is required", Toast.LENGTH_LONG).show();
                 finish();
 
             }
@@ -260,8 +245,14 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-    /*    if (checkPermission())
-            getLastLocation();*/
+
+
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
     }
 
     public int getStatusBarHeight() {
@@ -276,7 +267,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        viewPager.removeOnPageChangeListener(changeListener);
+        viewPager.unregisterOnPageChangeCallback(changeListener);
         super.onDestroy();
 
 

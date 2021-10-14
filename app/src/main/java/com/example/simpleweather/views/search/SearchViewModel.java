@@ -1,4 +1,4 @@
-package com.example.simpleweather.viewmodel;
+package com.example.simpleweather.views.search;
 
 import android.app.Application;
 
@@ -9,6 +9,7 @@ import androidx.lifecycle.LiveData;
 import com.example.simpleweather.database.DatabaseRepository;
 import com.example.simpleweather.model.City;
 import com.example.simpleweather.model.CityAndCurrentConditionsRelation;
+import com.example.simpleweather.network.ApiResponse;
 import com.example.simpleweather.network.NetworkRepository;
 
 import java.util.List;
@@ -19,18 +20,18 @@ public class SearchViewModel extends AndroidViewModel {
     public SearchViewModel(@NonNull Application application) {
         super(application);
 
-        networkRepository=new NetworkRepository(application);
-        databaseRepository= DatabaseRepository.getInstance(application);
+        networkRepository = NetworkRepository.getInstance(application);
+        databaseRepository = DatabaseRepository.getInstance(application);
     }
 
-    public LiveData<List<City>> getSearchResults(String apiKey,String searchText){
+    public LiveData<ApiResponse<List<City>>> getSearchResults(String apiKey, String searchText) {
 
         return networkRepository.getCityBySearch(apiKey, searchText);
     }
 
-    public LiveData<List<City>> getCities(String apiKey,String searchText,boolean withDetails){
+    public LiveData<ApiResponse<List<City>>> getCities(String apiKey, String searchText, boolean withDetails) {
 
-        return networkRepository.getCities(apiKey, searchText,withDetails);
+        return networkRepository.getCities(apiKey, searchText, withDetails);
     }
 
 
@@ -38,13 +39,16 @@ public class SearchViewModel extends AndroidViewModel {
         return databaseRepository.getCitiesAndWeatherConditions();
     }
 
-    public LiveData<City> getCityByLocationKey(String locationKey, String apiKey, boolean withDetails){
+    public LiveData<ApiResponse<City>> getCityByLocationKey(String locationKey, String apiKey, boolean withDetails) {
         return networkRepository.getCityDataByLocationKey(locationKey, apiKey, withDetails);
     }
 
-    public void deleteCity(City city){
+    public void deleteCity(City city) {
         databaseRepository.deleteCity(city);
     }
 
+    public void insertCity(City city) {
+        databaseRepository.insertNewCity(city);
+    }
 
 }

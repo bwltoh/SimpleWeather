@@ -3,7 +3,6 @@ package com.example.simpleweather.model;
 import androidx.room.Embedded;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
-import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 import com.google.gson.annotations.SerializedName;
@@ -31,24 +30,24 @@ public class CurrentWeatherConditions {
     private String precipitationType;
     @SerializedName("IsDayTime")
     private boolean isDayTime;
-    @Embedded
+    @Embedded(prefix = "Temperature")
     @SerializedName("Temperature")
     private Temperature temperature;
-    @Ignore
+    @Embedded(prefix = "RealFeelTemperature")
     @SerializedName("RealFeelTemperature")
     private Temperature realFeelTemperature;
     @SerializedName("RelativeHumidity")
     private int relativeHumidity;
-    @Ignore
+    @Embedded(prefix = "Wind")
     @SerializedName("Wind")
     private Wind wind;
-    @Ignore
+    @Embedded(prefix = "WindGust")
     @SerializedName("WindGust")
     private WindGust windGust;
-    @Ignore
+    @Embedded(prefix = "WindChillTemperature")
     @SerializedName("WindChillTemperature")
     private Temperature windChillTemperature;
-    @Ignore
+    @Embedded(prefix = "Pressure")
     @SerializedName("Pressure")
     private Pressure pressure;
     @SerializedName("UVIndex")

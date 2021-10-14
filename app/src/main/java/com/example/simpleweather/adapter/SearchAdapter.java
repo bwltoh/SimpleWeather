@@ -13,24 +13,26 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.simpleweather.R;
 import com.example.simpleweather.model.City;
 import com.example.simpleweather.model.CityAndCurrentConditionsRelation;
+import com.example.simpleweather.utils.TimeUtil;
 
 import java.util.List;
 
 public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchViewHolder> {
 
 
-    private List<CityAndCurrentConditionsRelation> cities;
-    private  Context                               context;
-    private OnCityChoosen                          onCityChoosen;
-    public SearchAdapter(Context context ,OnCityChoosen onCityChoosen) {
+    private       List<CityAndCurrentConditionsRelation> cities;
+    private final Context                                context;
+    private final OnCityChoosen                          onCityChoosen;
+
+    public SearchAdapter(Context context, OnCityChoosen onCityChoosen) {
         this.context = context;
-        this.onCityChoosen=onCityChoosen;
+        this.onCityChoosen = onCityChoosen;
     }
 
     @NonNull
     @Override
     public SearchViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-         View view= LayoutInflater.from(context).inflate(R.layout.row_search,parent,false);
+        View view = LayoutInflater.from(context).inflate(R.layout.row_search, parent, false);
         return new SearchViewHolder(view);
     }
 
@@ -53,6 +55,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
         this.cities=cities;
         notifyDataSetChanged();
     }
+
 
     public void removeItem(int position) {
        onCityChoosen.passCity(cities.get(position).city);
@@ -86,7 +89,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
             cityName.setText(city.city.getCityLocalizedName());
             countryName.setText(city.city.getCountry().getLocalizedName());
             if (city.conditions==null)return;
-            temp.setText(city.conditions.getTemperature().getMetric().getValue()+" C");
+            temp.setText(String.format(TimeUtil.getLocale(context.getResources()), "%.1f C", city.conditions.getTemperature().getMetric().getValue()));
             phrase.setText(city.conditions.getWeatherText());
             int ic=context.getResources().getIdentifier("p_"+city.conditions.getIcon(),"drawable",context.getPackageName());
             icon.setBackgroundResource(ic);

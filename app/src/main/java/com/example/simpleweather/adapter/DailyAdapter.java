@@ -60,34 +60,35 @@ public class DailyAdapter extends RecyclerView.Adapter<DailyAdapter.DailyViewHol
     class DailyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
 
-        TextView day,tempMax,tempMin,phrase,rainProbability;
-        ImageView icon;
+        TextView day, tempMax, tempMin, phrase, rainProbability, day_date;
+        ImageView    icon;
         DayForecasts dayForecasts;
+
         public DailyViewHolder(@NonNull View itemView) {
             super(itemView);
-            day=itemView.findViewById(R.id.day);
-            tempMax=itemView.findViewById(R.id.max_temp);
-            tempMin=itemView.findViewById(R.id.min_temp);
-            phrase=itemView.findViewById(R.id.phrase);
-            rainProbability=itemView.findViewById(R.id.rain_probability);
-            icon=itemView.findViewById(R.id.icon);
+            day = itemView.findViewById(R.id.day);
+            tempMax = itemView.findViewById(R.id.max_temp);
+            tempMin = itemView.findViewById(R.id.min_temp);
+            phrase = itemView.findViewById(R.id.phrase);
+            day_date = itemView.findViewById(R.id.day_date);
+            rainProbability = itemView.findViewById(R.id.rain_probability);
+            icon = itemView.findViewById(R.id.icon);
             itemView.setOnClickListener(this);
         }
 
         public void onBind(DayForecasts dayForecasts) {
 
-            this.dayForecasts=dayForecasts;
+            this.dayForecasts = dayForecasts;
 
-            day.setText(TimeUtil.getDayName(dayForecasts.getTime()));
-            tempMax.setText(dayForecasts.getDayTemperature().getMaxTemp().getValue()+" "
-            +dayForecasts.getDayTemperature().getMaxTemp().getUnit());
-            tempMin.setText(dayForecasts.getDayTemperature().getMinTemp().getValue()+" "
-                    +dayForecasts.getDayTemperature().getMinTemp().getUnit());
+            day.setText(TimeUtil.getDayName(context.getResources(), dayForecasts.getTime()));
+            tempMax.setText(String.format(TimeUtil.getLocale(context.getResources()), "%.1f %s", dayForecasts.getDayTemperature().getMaxTemp().getValue(), dayForecasts.getDayTemperature().getMaxTemp().getUnit()));
+            tempMin.setText(String.format(TimeUtil.getLocale(context.getResources()), "%.1f %s", dayForecasts.getDayTemperature().getMinTemp().getValue(), dayForecasts.getDayTemperature().getMinTemp().getUnit()));
             phrase.setText(dayForecasts.getDay().getIconPhrase());
-            int i=context.getResources().getIdentifier("p_"+dayForecasts.getDay().getIcon(),"drawable",context.getPackageName());
+            day_date.setText(TimeUtil.getDate(context.getResources(), dayForecasts.getTime()));
+            int i = context.getResources().getIdentifier("p_" + dayForecasts.getDay().getIcon(), "drawable", context.getPackageName());
 
             icon.setBackgroundResource(i);
-            rainProbability.setText(String.valueOf(dayForecasts.getDay().getRainProbability()));
+            rainProbability.setText(String.format(TimeUtil.getLocale(context.getResources()), "%d", dayForecasts.getDay().getRainProbability()));
         }
 
         @Override

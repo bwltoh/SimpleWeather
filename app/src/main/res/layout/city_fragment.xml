@@ -1,490 +1,483 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/scrollview"
-    android:layout_width="match_parent"
-     android:layout_height="match_parent"
-    android:paddingTop="70dp"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior"
-
-    tools:context=".views.CityFragment">
-<LinearLayout
+    android:id="@+id/refreshlayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    tools:context=".views.fragment.CityFragment">
 
-    <androidx.cardview.widget.CardView
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/scrollview"
         android:layout_width="match_parent"
-        android:layout_height="120dp"
-        android:layout_margin="12dp"
-        app:cardBackgroundColor="@color/transparebtblack"
-        app:cardCornerRadius="10dp"
+        android:layout_height="match_parent"
+        android:paddingTop="70dp"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
 
+        >
 
-        app:cardElevation="0dp">
-       <RelativeLayout
-
-           android:layout_width="match_parent"
-           android:layout_height="match_parent">
-           <ImageView
-               android:id="@+id/icon"
-               android:layout_width="wrap_content"
-               android:layout_height="wrap_content"
-               android:layout_alignParentTop="true"
-               android:layout_alignParentEnd="true"
-
-               android:layout_marginTop="10dp"
-               android:layout_marginEnd="10dp"/>
-           <TextView
-               android:id="@+id/curr_temp"
-               android:layout_width="wrap_content"
-               android:layout_height="wrap_content"
-                android:layout_below="@+id/date"
-               android:layout_marginStart="20dp"
-               android:layout_marginTop="10dp"
-               android:fontFamily="serif-monospace"
-
-               android:textSize="39sp"
-               android:textStyle="bold"/>
-           <TextView
-               android:id="@+id/date"
-               android:layout_width="wrap_content"
-               android:layout_height="wrap_content"
-               android:layout_alignParentTop="true"
-               android:layout_marginStart="20dp"
-               android:layout_marginTop="10dp"
-               android:text="--"/>
-           <TextView
-               android:id="@+id/weather_text"
-               android:layout_width="wrap_content"
-               android:layout_height="wrap_content"
-               android:layout_below="@id/icon"
-               android:layout_alignParentEnd="true"
-               android:layout_marginTop="10dp"
-               android:layout_marginEnd="20dp"
-               android:text="--"/>
-       </RelativeLayout>
-    </androidx.cardview.widget.CardView>
-    <androidx.cardview.widget.CardView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="12dp"
-        app:cardBackgroundColor="@color/transparebtblack"
-        app:cardCornerRadius="10dp"
-        app:cardElevation="0dp">
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-            <FrameLayout
-                android:id="@+id/root"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="120dp"
+                android:layout_margin="12dp"
+                app:cardBackgroundColor="@color/transparebtblack"
+                app:cardCornerRadius="10dp"
+
+
+                app:cardElevation="0dp">
+
+                <RelativeLayout
+
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <ImageView
+                        android:id="@+id/icon"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentEnd="true"
+                        android:contentDescription="@string/icon"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginEnd="10dp" />
+
+                    <TextView
+                        android:id="@+id/curr_temp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/date"
+                        android:layout_marginStart="20dp"
+                        android:layout_marginTop="10dp"
+                        android:fontFamily="serif-monospace"
+
+                        android:textSize="39sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/date"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginStart="20dp"
+                        android:layout_toStartOf="@id/icon"
+                        android:layout_alignParentStart="true"
+                        android:layout_marginTop="10dp"
+                        android:text="@string/placeholder" />
+
+                    <TextView
+                        android:id="@+id/weather_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/icon"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginEnd="20dp"
+                        android:text="@string/placeholder" />
+                </RelativeLayout>
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/toggle_group"
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="5dp">
-              <!--  <include layout=""/>-->
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/recycler_view"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"/>
-            </FrameLayout>
-            <com.google.android.material.button.MaterialButtonToggleGroup
-                android:id="@+id/toggle_group"
+                android:layout_margin="12dp"
+                app:cardBackgroundColor="@color/transparebtblack"
+                app:cardCornerRadius="10dp"
+                app:cardElevation="0dp">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <FrameLayout
+                        android:id="@+id/root"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/toggle_group"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="5dp">
+                        <!--  <include layout=""/>-->
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/recycler_view"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent" />
+                    </FrameLayout>
+
+                    <com.google.android.material.button.MaterialButtonToggleGroup
+                        android:id="@+id/toggle_group"
+                        android:layout_width="match_parent"
+
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentStart="true"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginStart="3dp"
+                        android:layout_marginEnd="3dp"
+                        app:checkedButton="@+id/hourly_btn"
+                        app:singleSelection="true">
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/hourly_btn"
+                            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:text="@string/hourly"
+                            android:textColor="@android:color/holo_red_dark"
+                            android:textSize="16sp"
+                            app:shapeAppearance="@style/ToggleGroupButtonCut"
+                            app:strokeWidth="2dp" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/daily_btn"
+                            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:text="@string/daily"
+                            android:textColor="@android:color/holo_red_dark"
+                            android:textSize="16sp"
+                            app:shapeAppearance="@style/ToggleGroupButtonCut"
+                            app:strokeWidth="2dp" />
+                    </com.google.android.material.button.MaterialButtonToggleGroup>
+                </RelativeLayout>
+
+
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
-
                 android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentEnd="true"
-                android:layout_marginStart="3dp"
-                android:layout_marginEnd="3dp"
-                app:checkedButton="@+id/hourly_btn"
-                app:singleSelection="true">
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/hourly_btn"
-                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                    android:layout_width="0dp"
+                android:layout_margin="12dp"
+                android:layout_marginBottom="70dp"
+                app:cardBackgroundColor="@color/transparebtblack"
+                app:cardCornerRadius="10dp"
+                app:cardElevation="0dp">
+
+                <TableLayout
+
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:text="Hourly"
-                    android:textColor="@android:color/holo_red_dark"
-                    android:textSize="16sp"
-                    app:shapeAppearance="@style/ToggleGroupButtonCut"
-                    app:strokeWidth="2dp"/>
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/daily_btn"
-                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:text="Daily"
-                    android:textColor="@android:color/holo_red_dark"
-                    android:textSize="16sp"
-                    app:shapeAppearance="@style/ToggleGroupButtonCut"
-                    app:strokeWidth="2dp"/>
-            </com.google.android.material.button.MaterialButtonToggleGroup>
-        </RelativeLayout>
+                    android:layout_margin="12dp"
+                    android:stretchColumns="*">
+                    <!--details row-->
+                    <TableRow>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="12dp"
+                            android:text="@string/details"
+                            android:textSize="20sp"
+                            android:textStyle="bold" />
+                    </TableRow>
+                    <!-- empty black row-->
+                    <TableRow android:background="@android:color/white">
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp" />
+                    </TableRow>
+                    <!-- wind row-->
+                    <TableRow>
 
 
-    </androidx.cardview.widget.CardView>
-   <androidx.cardview.widget.CardView
-       android:layout_width="match_parent"
-       android:layout_height="wrap_content"
-       android:layout_margin="12dp"
-       android:layout_marginBottom="70dp"
-       app:cardBackgroundColor="@color/transparebtblack"
-       app:cardCornerRadius="10dp"
-       app:cardElevation="0dp">
-
-       <TableLayout
-
-           android:layout_width="match_parent"
-           android:layout_height="wrap_content"
-           android:layout_margin="12dp"
-           android:stretchColumns="*"
-          >
-           <!--details row-->
-           <TableRow >
-               <TextView android:layout_width="wrap_content"
-                   android:layout_height="wrap_content"
-                   android:layout_margin="12dp"
-                   android:text="Details"
-                   android:textSize="20sp"
-                   android:textStyle="bold"/>
-           </TableRow>
-           <!-- empty black row-->
-           <TableRow android:background="@android:color/white">
-               <View android:layout_width="match_parent"
-                   android:layout_height="1dp"/>
-           </TableRow>
-           <!-- wind row-->
-           <TableRow  >
-
-               <LinearLayout android:layout_height="50dp"
-                   android:orientation="horizontal">
-                   <ImageView
-                       android:layout_width="24dp"
-                       android:layout_height="wrap_content"
-                       android:layout_gravity="center_vertical|start"
-                       android:src="@drawable/ic_wind"
-                       />
-                   <TextView android:layout_width="wrap_content"
-                       android:layout_height="wrap_content"
-                       android:layout_gravity="center_vertical"
-                        android:layout_marginStart="4dp"
-                       android:text="Wind"/>
-
-               </LinearLayout>
-               <LinearLayout android:layout_height="match_parent"
-                   android:gravity="end"
-                   android:orientation="horizontal">
-                   <ImageView
-                       android:id="@+id/wind_dir"
-                       android:layout_width="wrap_content"
-                       android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                       android:layout_marginEnd="4dp"
-                       android:src="@drawable/ic_wind_dir"
-                        />
-                   <TextView
-                       android:id="@+id/wind_value"
-                       android:layout_width="wrap_content"
-                       android:layout_height="wrap_content"
-                       android:layout_gravity="center_vertical"
-                       android:layout_marginEnd="4dp"
-                       android:text=""/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="50dp"
+                            android:layout_gravity="center_vertical"
+                            android:gravity="center_vertical"
+                            android:layout_marginStart="4dp"
+                            android:text="@string/wind"
+                            android:drawablePadding="4dp"
+                            app:drawableStartCompat="@drawable/ic_wind" />
 
 
-               </LinearLayout>
+                        <LinearLayout
+                            android:layout_height="match_parent"
+                            android:gravity="end"
+                            android:orientation="horizontal"
+                            tools:ignore="UseCompoundDrawables">
 
-           </TableRow>
-           <!-- empty black row-->
-           <TableRow android:background="@android:color/white">
-               <View android:layout_width="match_parent"
-                   android:layout_height="1dp"/>
-           </TableRow>
+                            <ImageView
+                                android:id="@+id/wind_dir"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:layout_marginEnd="4dp"
+                                android:src="@drawable/ic_wind_dir"
+                                android:contentDescription="@string/icon" />
 
-           <!--RealFeelTemperature row-->
-           <TableRow  >
-
-               <LinearLayout android:layout_height="50dp"
-                   android:orientation="horizontal"
-                  >
-                   <ImageView
-                       android:layout_width="24dp"
-                       android:layout_height="wrap_content"
-                       android:layout_gravity="center_vertical|start"
-                       android:src="@drawable/ic_temprature"
-                       />
-                   <TextView android:layout_width="wrap_content"
-                       android:layout_height="wrap_content"
-                       android:layout_gravity="center_vertical"
-                       android:layout_marginStart="4dp"
-                       android:text="Real Feel"/>
-
-               </LinearLayout>
-               <LinearLayout android:layout_height="match_parent"
-                   android:gravity="end"
-                   android:orientation="horizontal">
-
-                   <TextView
-                       android:id="@+id/realfeel_vlaue" android:layout_width="wrap_content"
-                       android:layout_height="wrap_content"
-                       android:layout_gravity="center_vertical"
-                       android:layout_marginEnd="4dp"
-                       android:text=""/>
+                            <TextView
+                                android:id="@+id/wind_value"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:layout_marginEnd="4dp"
+                                android:text="" />
 
 
-               </LinearLayout>
+                        </LinearLayout>
 
-           </TableRow>
-           <!-- empty black row-->
-           <TableRow android:background="@android:color/white">
-               <View android:layout_width="match_parent"
-                   android:layout_height="1dp"/>
-           </TableRow>
+                    </TableRow>
+                    <!-- empty black row-->
+                    <TableRow android:background="@android:color/white">
 
-           <!--RelativeHumidity row-->
-           <TableRow  >
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp" />
+                    </TableRow>
 
-               <LinearLayout android:layout_height="50dp"
-                   android:orientation="horizontal">
-                   <ImageView
-                       android:layout_width="24dp"
-                       android:layout_height="wrap_content"
-                       android:layout_gravity="center_vertical|start"
-                       android:src="@drawable/ic_humidity"
-                       />
-                   <TextView android:layout_width="wrap_content"
-                       android:layout_height="wrap_content"
-                       android:layout_gravity="center_vertical"
-                       android:layout_marginStart="4dp"
-                       android:text="Humidity"/>
-
-               </LinearLayout>
-               <LinearLayout  android:layout_height="match_parent"
-                   android:gravity="end"
-                   android:orientation="horizontal">
+                    <!--RealFeelTemperature row-->
+                    <TableRow>
 
 
-                   <TextView android:id="@+id/humidity" android:layout_width="wrap_content"
-                       android:layout_height="wrap_content"
-                       android:layout_gravity="center_vertical"
-                       android:layout_marginEnd="4dp"
-                       android:text=""/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="50dp"
+                            android:layout_gravity="center_vertical"
+                            android:gravity="center_vertical"
+                            android:drawablePadding="4dp"
+                            app:drawableStartCompat="@drawable/ic_temprature"
 
-               </LinearLayout>
-
-           </TableRow>
-           <!-- empty black row-->
-           <TableRow android:background="@android:color/white">
-               <View android:layout_width="match_parent"
-                   android:layout_height="1dp"/>
-           </TableRow>
+                            android:layout_marginStart="4dp"
+                            android:text="@string/real_feel" />
 
 
-           <!--WindChillTemperature row-->
-           <TableRow  >
-
-               <LinearLayout android:layout_height="50dp"
-                   android:orientation="horizontal">
-                   <ImageView
-                       android:layout_width="24dp"
-                       android:layout_height="wrap_content"
-                       android:layout_gravity="center_vertical|start"
-                       android:src="@drawable/ic_temprature"
-                       />
-                   <TextView android:layout_width="wrap_content"
-                       android:layout_height="wrap_content"
-                       android:layout_gravity="center_vertical"
-                       android:layout_marginStart="4dp"
-                       android:text="Wind chill"/>
-
-               </LinearLayout>
-               <LinearLayout android:layout_height="match_parent"
-                   android:gravity="end"
-                   android:orientation="horizontal">
-
-                   <TextView android:id="@+id/windchill_vlaue" android:layout_width="wrap_content"
-                       android:layout_height="wrap_content"
-                       android:layout_gravity="center_vertical"
-                       android:layout_marginEnd="4dp"
-                       android:text=""/>
+                        <TextView
+                            android:id="@+id/realfeel_vlaue"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical|end"
+                            tools:text="36.8 C"
+                            android:layout_marginEnd="4dp"
+                            android:text="" />
 
 
-               </LinearLayout>
+                    </TableRow>
+                    <!-- empty black row-->
+                    <TableRow android:background="@android:color/white">
 
-           </TableRow>
-           <!-- empty black row-->
-           <TableRow android:background="@android:color/white">
-               <View android:layout_width="match_parent"
-                   android:layout_height="1dp"/>
-           </TableRow>
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp" />
+                    </TableRow>
 
-           <!--WindGust row-->
-           <TableRow  >
-
-               <LinearLayout android:layout_height="50dp"
-                   android:orientation="horizontal">
-                   <ImageView
-                       android:layout_width="24dp"
-                       android:layout_height="wrap_content"
-                       android:layout_gravity="center_vertical|start"
-                       android:src="@drawable/ic_wind"
-                       />
-                   <TextView android:layout_width="wrap_content"
-                       android:layout_height="wrap_content"
-                       android:layout_gravity="center_vertical"
-                       android:layout_marginStart="4dp"
-                       android:text="Wind Gust"/>
-
-               </LinearLayout>
-               <LinearLayout android:layout_height="match_parent"
-                   android:gravity="end"
-                   android:orientation="horizontal">
-
-                   <TextView
-                       android:id="@+id/wind_gust_vlaue"
-                       android:layout_width="wrap_content"
-                       android:layout_height="wrap_content"
-                       android:layout_gravity="center_vertical"
-                       android:layout_marginEnd="4dp"
-                       android:text=""/>
+                    <!--RelativeHumidity row-->
+                    <TableRow>
 
 
-               </LinearLayout>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="50dp"
+                            android:layout_gravity="center_vertical"
+                            android:gravity="center_vertical"
+                            android:layout_marginStart="4dp"
+                            android:drawablePadding="4dp"
+                            app:drawableStartCompat="@drawable/ic_humidity"
 
-           </TableRow>
-           <!-- empty black row-->
-           <TableRow android:background="@android:color/white">
-               <View android:layout_width="match_parent"
-                   android:layout_height="1dp"/>
-           </TableRow>
-
-           <!--PrecipitationType-->
-           <TableRow  >
-
-               <LinearLayout android:layout_height="50dp"
-                   android:orientation="horizontal">
-                   <ImageView
-                       android:layout_width="24dp"
-                       android:layout_height="wrap_content"
-                       android:layout_gravity="center_vertical|start"
-                       android:src="@drawable/ic_umbrella"
-                       />
-                   <TextView android:layout_width="wrap_content"
-                       android:layout_height="wrap_content"
-                       android:layout_gravity="center_vertical"
-                       android:layout_marginStart="4dp"
-                       android:text="Precipitation"/>
-
-               </LinearLayout>
-               <LinearLayout android:layout_height="match_parent"
-                   android:gravity="end"
-                   android:orientation="horizontal">
+                            android:text="@string/humidity" />
 
 
-                   <TextView
-                       android:id="@+id/precipitation"
-                       android:layout_width="wrap_content"
-                       android:layout_height="wrap_content"
-                       android:layout_gravity="center_vertical"
-                       android:layout_marginEnd="4dp"
-                       android:text=""/>
-
-               </LinearLayout>
-
-           </TableRow>
-           <!-- empty black row-->
-           <TableRow android:background="@android:color/white">
-               <View android:layout_width="match_parent"
-                   android:layout_height="1dp"/>
-           </TableRow>
-           <!--pressure row-->
-           <TableRow  >
-
-               <LinearLayout android:layout_height="50dp"
-                   android:orientation="horizontal">
-                   <ImageView
-                       android:layout_width="24dp"
-                       android:layout_height="wrap_content"
-                       android:layout_gravity="center_vertical|start"
-                       android:src="@drawable/ic_pressure"
-                       />
-                   <TextView android:layout_width="wrap_content"
-                       android:layout_height="wrap_content"
-                       android:layout_gravity="center_vertical"
-                       android:layout_marginStart="4dp"
-                       android:text="Pressure"/>
-
-               </LinearLayout>
-               <LinearLayout android:layout_height="match_parent"
-                   android:gravity="end"
-                   android:orientation="horizontal">
-
-                   <TextView
-                       android:id="@+id/pressure_value"
-                       android:layout_width="wrap_content"
-                       android:layout_height="wrap_content"
-                       android:layout_gravity="center_vertical"
-                       android:layout_marginEnd="4dp"
-                       android:text=""/>
+                        <TextView
+                            android:id="@+id/humidity"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical|end"
+                            tools:text="35 %"
+                            android:layout_marginEnd="4dp"
+                            android:text="" />
 
 
-               </LinearLayout>
+                    </TableRow>
+                    <!-- empty black row-->
+                    <TableRow android:background="@android:color/white">
 
-           </TableRow>
-           <!-- empty black row-->
-           <TableRow android:background="@android:color/white">
-               <View android:layout_width="match_parent"
-                   android:layout_height="1dp"/>
-           </TableRow>
-
-           <!--uvIndex-->
-           <TableRow >
-
-               <LinearLayout android:layout_height="50dp"
-                   android:orientation="horizontal">
-                   <ImageView
-                       android:layout_width="24dp"
-                       android:layout_height="wrap_content"
-                       android:layout_gravity="center_vertical|start"
-                       android:src="@drawable/ic_uvindex"
-                       />
-                   <TextView android:layout_width="wrap_content"
-                       android:layout_height="wrap_content"
-                       android:layout_gravity="center_vertical"
-                       android:layout_marginStart="4dp"
-                       android:text="UVIndex"/>
-
-               </LinearLayout>
-               <LinearLayout android:layout_height="match_parent"
-                   android:gravity="end"
-                   android:orientation="horizontal">
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp" />
+                    </TableRow>
 
 
-                   <TextView
-                       android:id="@+id/uv_index"
-                       android:layout_width="wrap_content"
-                       android:layout_height="wrap_content"
-                       android:layout_gravity="center_vertical"
-                       android:layout_marginEnd="4dp"
-                       android:text=""/>
+                    <!--WindChillTemperature row-->
+                    <TableRow>
 
-               </LinearLayout>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="50dp"
+                            android:layout_gravity="center_vertical"
+                            android:gravity="center_vertical"
+                            android:layout_marginStart="4dp"
+                            android:drawablePadding="4dp"
+                            app:drawableStartCompat="@drawable/ic_temprature"
 
-           </TableRow>
-           <!-- empty black row-->
-           <TableRow android:background="@android:color/white">
-               <View android:layout_width="match_parent"
-                   android:layout_height="1dp"/>
-           </TableRow>
-       </TableLayout>
-   </androidx.cardview.widget.CardView>
+                            android:text="@string/wind_chill" />
 
-</LinearLayout>
 
-</androidx.core.widget.NestedScrollView>
+                        <TextView
+                            android:id="@+id/windchill_vlaue"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical|end"
+                            tools:text="36.8 C"
+                            android:layout_marginEnd="4dp"
+
+                            android:text="" />
+
+
+                    </TableRow>
+                    <!-- empty black row-->
+                    <TableRow android:background="@android:color/white">
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp" />
+                    </TableRow>
+
+                    <!--WindGust row-->
+                    <TableRow>
+
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="50dp"
+                            android:layout_gravity="center_vertical"
+                            android:gravity="center_vertical"
+                            android:layout_marginStart="4dp"
+                            android:drawablePadding="4dp"
+                            app:drawableStartCompat="@drawable/ic_wind"
+                            android:text="@string/wind_gust" />
+
+
+                        <TextView
+                            android:id="@+id/wind_gust_vlaue"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical|end"
+                            tools:text="32.8 km/h"
+                            android:layout_marginEnd="4dp"
+                            android:text="" />
+
+
+                    </TableRow>
+                    <!-- empty black row-->
+                    <TableRow android:background="@android:color/white">
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp" />
+                    </TableRow>
+
+                    <!--PrecipitationType-->
+                    <TableRow>
+
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="50dp"
+                            android:layout_gravity="center_vertical"
+                            android:gravity="center_vertical"
+                            android:layout_marginStart="4dp"
+                            android:drawablePadding="4dp"
+                            app:drawableStartCompat="@drawable/ic_umbrella"
+                            android:text="@string/precipitation" />
+
+
+                        <TextView
+                            android:id="@+id/precipitation"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical|end"
+                            tools:text="36"
+                            android:layout_marginEnd="4dp"
+                            android:text="" />
+
+
+                    </TableRow>
+                    <!-- empty black row-->
+                    <TableRow android:background="@android:color/white">
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp" />
+                    </TableRow>
+                    <!--pressure row-->
+                    <TableRow>
+
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="50dp"
+                            android:layout_gravity="center_vertical"
+                            android:gravity="center_vertical"
+                            android:layout_marginStart="4dp"
+                            android:drawablePadding="4dp"
+                            app:drawableStartCompat="@drawable/ic_pressure"
+                            android:text="@string/pressure" />
+
+
+                        <TextView
+                            android:id="@+id/pressure_value"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical|end"
+                            tools:text="1004.1 mb"
+                            android:layout_marginEnd="4dp"
+                            android:text="" />
+
+
+                    </TableRow>
+                    <!-- empty black row-->
+                    <TableRow android:background="@android:color/white">
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp" />
+                    </TableRow>
+
+                    <!--uvIndex-->
+                    <TableRow>
+
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="50dp"
+                            android:layout_gravity="center_vertical"
+                            android:gravity="center_vertical"
+                            android:layout_marginStart="4dp"
+                            android:drawablePadding="4dp"
+                            app:drawableStartCompat="@drawable/ic_uvindex"
+                            android:text="@string/uvindex" />
+
+
+                        <TextView
+                            android:id="@+id/uv_index"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical|end"
+                            tools:text="1 low"
+                            android:layout_marginEnd="4dp"
+                            android:text="" />
+
+
+                    </TableRow>
+                    <!-- empty black row-->
+                    <TableRow android:background="@android:color/white">
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp" />
+                    </TableRow>
+                </TableLayout>
+            </androidx.cardview.widget.CardView>
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

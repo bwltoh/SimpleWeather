@@ -76,13 +76,11 @@ public class HourlyAdapter extends RecyclerView.Adapter<HourlyAdapter.HourlyView
 
         public void onBind(HoulyForecasts houlyForecasts) {
 
-            hour.setText(TimeUtil.getHour(houlyForecasts.getTime(),timezone));
-            temp.setText(houlyForecasts.getTemprature().getValue()+
-                    " "+houlyForecasts.getTemprature().getUnit());
-            wind.setText(houlyForecasts.getWind().getSpeed().getValue()+
-                    " "+houlyForecasts.getWind().getSpeed().getUnit());
+            hour.setText(TimeUtil.getHour(context.getResources(), houlyForecasts.getTime(), timezone));
+            temp.setText(String.format(TimeUtil.getLocale(context.getResources()), "%.1f %s", houlyForecasts.getTemprature().getValue(), houlyForecasts.getTemprature().getUnit()));
+            wind.setText(String.format(TimeUtil.getLocale(context.getResources()), "%.1f %s", houlyForecasts.getWind().getSpeed().getValue(), houlyForecasts.getWind().getSpeed().getUnit()));
             rainProbability.setText(String.valueOf(houlyForecasts.getRainProbability()));
-            int i=context.getResources().getIdentifier("p_"+houlyForecasts.getIcon(),"drawable",context.getPackageName());
+            int i = context.getResources().getIdentifier("p_" + houlyForecasts.getIcon(), "drawable", context.getPackageName());
             icon.setBackgroundResource(i);
         }
     }

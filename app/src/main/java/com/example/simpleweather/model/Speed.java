@@ -1,11 +1,13 @@
 package com.example.simpleweather.model;
 
+import androidx.room.Embedded;
+
 import com.google.gson.annotations.SerializedName;
 
 public class Speed {
 
 
-
+    @Embedded
     @SerializedName("Metric")
     private Metric metric;
 
@@ -13,5 +15,7 @@ public class Speed {
         return metric;
     }
 
-
+    public void setMetric(Metric metric) {
+        this.metric = metric;
+    }
 }
